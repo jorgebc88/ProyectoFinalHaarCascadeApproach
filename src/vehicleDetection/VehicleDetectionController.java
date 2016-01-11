@@ -92,9 +92,7 @@ public class VehicleDetectionController {
 			this.lbpClassifier.setDisable(true);
 
 			// start the video capture
-			this.capture.open("F:/Proyecto Final Facultad/Video MAte de Luna 2/Avi/2/MVI_3480.avi");
-			// this.capture.open("F:/Proyecto Final Facultad/Video MAte de
-			// Luna/MVI_2561.avi");
+			this.capture.open("resources/video/MVI_3480.avi");
 
 			// is the video stream available?
 			if (this.capture.isOpened()) {
@@ -256,7 +254,7 @@ public class VehicleDetectionController {
 					if (!vehicle.isCounted() && this.shouldBeCounted(rect)) {
 						vehicle.setCounted(true);
 						this.autos++; // modificar!!
-						ObjectRandom.httpPost("Car", vehicle.getDetectionDate());
+						//ObjectRandom.httpPost("Car", vehicle.getDetectionDate());
 						System.out.println("Autos: " + this.autos + " " + vehicle);
 						this.vehicleSet.remove(vehicle);
 					}
@@ -334,7 +332,7 @@ public class VehicleDetectionController {
 		if (this.lbpClassifier.isSelected())
 			this.lbpClassifier.setSelected(false);
 
-		this.checkboxSelection("F:/2_carCascade.xml");
+		this.checkboxSelection("resources/lbpcascades/1_carCascade.xml");
 	}
 
 	/**
@@ -347,7 +345,7 @@ public class VehicleDetectionController {
 		if (this.haarClassifier.isSelected())
 			this.haarClassifier.setSelected(false);
 
-		this.checkboxSelection("F:/1_carCascade.xml");
+		this.checkboxSelection("resources/lbpcascades/1_carCascade.xml");
 	}
 
 	/**
