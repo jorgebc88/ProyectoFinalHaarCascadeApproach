@@ -22,13 +22,16 @@ public class DetectedObject implements Serializable{
 
     private Date date;
     
+    private int camera_id;
+    
     public DetectedObject(){
     }
-    public DetectedObject(String direction, String objectType, Date date) {
+    public DetectedObject(String direction, String objectType, Date date, int camera_id) {
     	super();
     	this.direction = direction;
-        ObjectType = objectType;
+        this.ObjectType = objectType;
         this.date = date;
+        this.camera_id = camera_id;
     }
 
     public void setId(Long id) {
@@ -62,4 +65,10 @@ public class DetectedObject implements Serializable{
     public Date getDate() {
         return date;
     }
+	public int getCamera_id() {
+		return camera_id;
+	}
+	public void setCamera_id(int camera_id) {
+		this.camera_id = camera_id;
+	}
 }

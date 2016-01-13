@@ -64,7 +64,7 @@ public class VehicleDetectionController {
 	private boolean cameraActive;
 
 	// face cascade classifier
-	private CascadeClassifier faceCascade;
+	private CascadeClassifier carCascade;
 	private int absoluteFaceSize;
 
 	/**
@@ -72,7 +72,7 @@ public class VehicleDetectionController {
 	 */
 	protected void init() {
 		this.capture = new VideoCapture();
-		this.faceCascade = new CascadeClassifier();
+		this.carCascade = new CascadeClassifier();
 		this.absoluteFaceSize = 0;
 	}
 
@@ -184,7 +184,7 @@ public class VehicleDetectionController {
 	 *            it looks for faces in this frame
 	 */
 	private void detectAndDisplay(Mat frame) {
-		MatOfRect faces = new MatOfRect();
+		MatOfRect cars = new MatOfRect();
 		Mat grayFrame = new Mat();
 
 		// convert the frame in gray scale
@@ -203,15 +203,15 @@ public class VehicleDetectionController {
 				new Scalar(0, 0, 250));
 
 		// detect faces
-		this.faceCascade.detectMultiScale(grayFrame, faces, 1.1, 2, 0 | Objdetect.CASCADE_SCALE_IMAGE,
+		this.carCascade.detectMultiScale(grayFrame, cars, 1.1, 2, 0 | Objdetect.CASCADE_SCALE_IMAGE,
 				new Size(this.absoluteFaceSize, this.absoluteFaceSize), new Size());
 		// each rectangle in faces is a face: draw them!
-		Rect[] facesArray = faces.toArray();
-		for (int i = 0; i < facesArray.length; i++) {
-			Imgproc.rectangle(frame, facesArray[i].tl(), facesArray[i].br(), new Scalar(0, 255, 0), 3);
-			Imgproc.drawMarker(frame, this.calculateMassCenterRectangle(facesArray[i]), new Scalar(0, 250, 0));
+		Rect[] carsArray = cars.toArray();
+		for (int i = 0; i < carsArray.length; i++) {
+			Imgproc.rectangle(frame, carsArray[i].tl(), carsArray[i].br(), new Scalar(0, 255, 0), 3);
+			Imgproc.drawMarker(frame, this.calculateMassCenterRectangle(carsArray[i]), new Scalar(0, 250, 0));
 			try {
-				this.defineVehicle(facesArray[i], frame.width());
+				this.defineVehicle(carsArray[i], frame.width(), "Car");
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -227,7 +227,7 @@ public class VehicleDetectionController {
 
 	private double yLinePosition = 0;
 
-	private void defineVehicle(Rect rect, int width) throws Exception {
+	private void defineVehicle(Rect rect, int width, String type) throws Exception {
 		Vehicle vehicleAux;
 		boolean isANewVehicle = true;
 		Date date = new Date();
@@ -254,8 +254,8 @@ public class VehicleDetectionController {
 					if (!vehicle.isCounted() && this.shouldBeCounted(rect)) {
 						vehicle.setCounted(true);
 						this.autos++; // modificar!!
-						//ObjectRandom.httpPost("Car", vehicle.getDetectionDate());
-						System.out.println("Autos: " + this.autos + " " + vehicle);
+						ObjectRandom.httpPost(type, vehicle.getDetectionDate());
+						System.out.println(type + ": " + this.autos + " " + vehicle);
 						this.vehicleSet.remove(vehicle);
 					}
 				}
@@ -279,7 +279,7 @@ public class VehicleDetectionController {
 		return new Point(x, y);
 
 	}
-	
+
 	private Point calculateMassCenter(Mat contour) {
 		Moments moment = Imgproc.moments(contour);
 		double cx = moment.m10 / moment.m00;
@@ -356,7 +356,7 @@ public class VehicleDetectionController {
 	 */
 	private void checkboxSelection(String classifierPath) {
 		// load the classifier(s)
-		this.faceCascade.load(classifierPath);
+		this.carCascade.load(classifierPath);
 
 		// now the video capture can start
 		this.cameraButton.setDisable(false);

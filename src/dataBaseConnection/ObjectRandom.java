@@ -16,12 +16,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class ObjectRandom {
 	public static String httpPost(String type, Date date) throws Exception {
 		DetectedObject detectedObject = null;
-		detectedObject = new DetectedObject("South", type, date);
+		detectedObject = new DetectedObject("South", type, date, 1);
 
 		String urlStr = "http://localhost:8080/FinalProject/detectedObject/DetectedObject";
 
 		URL url = new URL(urlStr);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//		HttpURLConnection conn = HttpURLConnectionSingleton.getInstance().getConn();
 		conn.setRequestMethod("POST");
 		conn.setDoOutput(true);
 		conn.setDoInput(true);
